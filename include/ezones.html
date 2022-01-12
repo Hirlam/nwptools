@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><body>
+    <h3>Extension zones</h3>
+    There are two types of extension zone, inner <b>E</b> or
+    outer <b>E'</b>, see figure.<br>
+    Only one of them can have non-zero size(s).<br>
+    <b>E</b> always has the same dimension in x- and y-directions,
+    but <b>E'</b> dimensions can differ.<br>
+    To specify <b>E</b> set <kbd><b>E'-zoney = 0</b></kbd>.<br>
+    In this case the prime number constraints apply to <kbd><b>Nlon</b></kbd>
+    and <kbd><b>Nlat</b></kbd>.<br>
+    If both dimensions are non-zero, <b>E'</b> is assumed.<br>
+    In this case the prime factor constraints apply to
+    <kbd><b>Nlon + E'-zonex</b></kbd> and <kbd><b>Nlat + E'-zoney</b></kbd>.<p>
+    <img src="ezones.png"></img>
+</body></html>
