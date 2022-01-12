@@ -633,7 +633,7 @@ function showEZhelp(id) {
     var left = window.screenX + 280;
     var top = window.screenY + 180 ;
     if (! iwin || iwin.closed) {
-	var attr = 'popup=yes,left='+left+',top='+top+',width=620,height=600,' +
+	var attr = 'popup=yes,left='+left+',top='+top+',width=680,height=620,' +
 	    'scrollbars=no,status=no,menubar=no,toolbar=no,replace=no';
 	iwin = window.open("include/ezones.html","xwin",attr);
     }
