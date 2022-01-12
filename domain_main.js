@@ -64,6 +64,7 @@ var mapix = 0;
 var cval = getCookie("mapix");
 if ( cval != "" ) mapix = parseInt(cval);
 var proj_name = map_proj[mapix];
+var iwin = null;
 
 // Base layer menu
 var baseOpts = [
@@ -125,8 +126,8 @@ function buildInterface() {
 		{type: "input", name: 'lon0'+i, label: 'Lon0:', validate: "validLon", required: true, inputWidth: 115},
 		{type: "input", name: 'lat0'+i, label: 'Lat0:', validate: "validLat", required: true, inputWidth: 115},
 		{type: "input", name: 'gsize'+i, label: 'Gsize:', validate: "validGsize", required: true, inputWidth: 120},
-		{type: "input", name: 'ezone'+i, label: "E(')zone(x):", validate: "validEzone", required: true, inputWidth: 100},
-		{type: "input", name: 'ezony'+i, label: "0|E'-zone-y:", validate: "validEzone", required: true, inputWidth: 100},
+		{type: "input", name: 'ezone'+i, label: "Ezone or E'-zonex:", validate: "validEzone", required: true, inputWidth: 60},
+		{type: "input", name: 'ezony'+i, label: "0 (E) or E'-zoney:", validate: "validEzone", required: true, inputWidth: 60},
 		{type: "checkbox", name: 'showez'+i, label: "Show E(')zone: ", checked:false},
 		{type: "input", name: 'labela'+i, label: 'Label:', required: false, inputWidth: 150},
 		{type: "checkbox", name: 'filla'+i, label: "Fill domain: ", checked:false},
@@ -141,7 +142,9 @@ function buildInterface() {
 	    ]},
 	    {type: "block", name: "block2a"+i, list: [
 		{type: "newcolumn"},
-		{type: "button", name: "qfila"+i, value: "QuickFill"}
+		{type: "button", name: "qfila"+i, value: "QuickFill"},
+		{type: "newcolumn"},
+		{type: "button", name: "ezhelp"+i, value: "E(')zone help"}
 	    ]}
 	];
 	oa[i-1].form = new dhtmlXForm("formA"+i,formAData);
@@ -174,7 +177,7 @@ function buildInterface() {
     for (var i=1; i<=ntab; i++) {
 	tab.tabs("tab"+i).attachObject(divs[i-1]);
 	oa[i-1].form.attachEvent("onButtonClick", function(id) {
-	    var t = id.match(/^(showa|hidea|cola|qfila)(\d+)$/);
+	    var t = id.match(/^(showa|hidea|cola|qfila|ezhelp)(\d+)$/);
 	    if (t.length < 3) {
 		console.log("id was: "+id+", length = "+t.length);
 	    } else if (t[1] == "showa") {
@@ -186,6 +189,8 @@ function buildInterface() {
 		setColor(oa[j-1]);
 	    } else if (t[1] == "qfila") {
 		quickFillA(t[2]);
+	    } else if (t[1] == "ezhelp") {
+		showEZhelp(t[2]);
 	    }
 	});
 	oh[i-1].form.attachEvent("onButtonClick", function(id) {
@@ -622,6 +627,17 @@ function quickFillA(ix) {
 	    form2.setItemValue("ddef","");
 	}
     });
+}
+
+function showEZhelp(id) {
+    var left = window.screenX + 280;
+    var top = window.screenY + 180 ;
+    if (! iwin || iwin.closed) {
+	var attr = 'popup=yes,left='+left+',top='+top+',width=620,height=600,' +
+	    'scrollbars=no,status=no,menubar=no,toolbar=no,replace=no';
+	iwin = window.open("include/ezones.html","xwin",attr);
+    }
+    iwin.focus();
 }
 
 // Handle a click in the map area toolbar
