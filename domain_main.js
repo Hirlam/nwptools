@@ -130,7 +130,7 @@ function buildInterface() {
 		{type: "input", name: 'ezony'+i, label: "0 (E) or E'-zoney:", validate: "validEzone", required: true, inputWidth: 60},
 		{type: "checkbox", name: 'showez'+i, label: "Show E(')zone: ", checked:false},
 		{type: "input", name: 'labela'+i, label: 'Label:', required: false, inputWidth: 150},
-		{type: "checkbox", name: 'filla'+i, label: "Fill domain: ", checked:false},
+		{type: "input", name: 'filla'+i, label: 'Fill percent (0-100):', validate: "validPercent", value: 0, required: true, inputWidth: 60},
 		{type: "input", name: 'lwida'+i, label: 'Border line width:', validate: "validLwidth", value: 2, required: true, inputWidth: 80}
 	    ]},
 	    {type: "block", name: "blocka"+i, list: [
@@ -159,7 +159,7 @@ function buildInterface() {
 		{type: "input", name: 'polat'+i, label: 'PoLat:', validate: "validLat", required: true, inputWidth: 115},
 		{type: "input", name: 'polon'+i, label: 'PoLon:', validate: "validLon", required: true, inputWidth: 115},
 		{type: "input", name: 'labelh'+i, label: 'Label:', required: false, inputWidth: 150},
-		{type: "checkbox", name: 'fillh'+i, label: "Fill domain: ", checked:false},
+		{type: "input", name: 'fillh'+i, label: 'Fill percent (0-100):', validate: "validPercent", value: 0, required: true, inputWidth: 60},
 		{type: "input", name: 'lwidh'+i, label: 'Border line width:', validate: "validLwidth", value: 2, required: true, inputWidth: 80}
 	    ]},
 	    {type: "block", name: "blockh"+i, list: [
@@ -298,6 +298,9 @@ function validGsize(a) {
 function validLwidth(n) {
     return ( (n == parseInt(n)) && n >= 1 && n <= 20 );
 }
+function validPercent(n) {
+    return ( (n == parseInt(n)) && n >= 0 && n <= 100 );
+}
 
 // Draw Lambert or pol. ster. domain
 function showLambPS(ix) {
@@ -329,7 +332,8 @@ function showLambPS(ix) {
     }
     var showez = oa[ix-1].form.getItemValue("showez"+ix);
     var label = oa[ix-1].form.getItemValue("labela"+ix);
-    var filla = oa[ix-1].form.getItemValue("filla"+ix);
+    var filla = parseInt(oa[ix-1].form.getItemValue("filla"+ix));
+    if ( ! validPercent(filla) ) return false;
     var lwida = parseInt(oa[ix-1].form.getItemValue("lwida"+ix));
     if ( ! validLwidth(lwida) ) return false;
     var msg = "";
@@ -426,7 +430,8 @@ function showLambPS(ix) {
 	if (j>ezone+ezony) lonlat.push( [ obj.x, obj.y ] );
 	if (showez) lolaez.push( [ obj.x, obj.y ] );
     }
-    var fac = filla ? (showez ? 0.15 : 0.25) : 0.0;
+    //var fac = filla ? (showez ? 0.15 : 0.25) : 0.0;
+    var fac = filla / 100.0;
     var fill = new ol.style.Fill({
 	color: hex2rgba(oa[ix-1].color,fac)
     });
@@ -502,7 +507,8 @@ function showRotLatLon(ix) {
     var polat = parseFloat(oh[ix-1].form.getItemValue("polat"+ix));
     if ( ! validLat(polat) ) return false;
     var label = oh[ix-1].form.getItemValue("labelh"+ix);
-    var fillh = oh[ix-1].form.getItemValue("fillh"+ix);
+    var fillh = parseInt(oa[ix-1].form.getItemValue("fillh"+ix));
+    if ( ! validPercent(fillh) ) return false;
     var lwidh = parseInt(oh[ix-1].form.getItemValue("lwidh"+ix));
     if ( ! validLwidth(lwidh) ) return false;
     // form contains valid data
@@ -533,7 +539,8 @@ function showRotLatLon(ix) {
 	obj = rll2geo(west,y,polon,polat);
 	lonlat.push( [ obj.lon, obj.lat ] );
     }
-    var fac = fillh ? 0.15 : 0.0;
+//    var fac = fillh ? 0.15 : 0.0;
+    var fac = fillh / 100.0;
     var fill = new ol.style.Fill({
 	color: hex2rgba(oh[ix-1].color,fac)
     });
